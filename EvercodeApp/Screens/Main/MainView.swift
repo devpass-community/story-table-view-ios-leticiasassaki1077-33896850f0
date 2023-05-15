@@ -5,7 +5,9 @@ final class MainView: UIView {
     lazy var tableView: UITableView = {
        
         let view = UITableView()
+        view.register(UITableViewCell.self, forCellReuseIdentifier: "CellItem")
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.dataSource = self
         return view
     }()
     
@@ -36,7 +38,7 @@ private extension MainView {
 
     func setupViews() {
 
-        self.backgroundColor = .white
+        
 
         self.configureSubviews()
         self.configureSubviewsConstraints()
@@ -51,10 +53,26 @@ private extension MainView {
 
         NSLayoutConstraint.activate([
             
-            tableView.topAnchor.constraint(equalTo: topAnchor),
             tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
+    }
+}
+
+extension MainView: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return items.count
+    }
+    
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "CellItem") else {
+            fatalError()
+        }
+        
+        cell.textLabel?.text = items[indexPath.row]
+        return cell
+        
     }
 }
